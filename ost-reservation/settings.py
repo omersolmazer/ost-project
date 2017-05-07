@@ -77,14 +77,18 @@ WSGI_APPLICATION = 'ost-reservation.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_8bfee3ba4dc8c26',
-        'USER': 'bc9b55df022ec2',
-        'PASSWORD': '21e76a60',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'heroku_8bfee3ba4dc8c26',
+#         'USER': 'bc9b55df022ec2',
+#         'PASSWORD': '21e76a60',
+#         'HOST': ,
+#     }
+# }
+DATABASES = {}
+DATABASES['default'] =  dj_database_url.config()
+DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
