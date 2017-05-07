@@ -29,6 +29,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
+    'ost-reservation',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,15 +81,13 @@ WSGI_APPLICATION = 'ost-reservation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_8bfee3ba4dc8c26',
-        'USER': 'bc9b55df022ec2',
-        'PASSWORD': '21e76a60',
+        'NAME': 'heroku_80416a779774fef',
+        'USER': 'b41dc03557b239',
+        'PASSWORD': '31b706dc',
         'HOST': 'us-cdbr-iron-east-03.cleardb.net'
     }
 }
-# DATABASES = {}
-# DATABASES['default'] =  dj_database_url.config()
-# DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
