@@ -79,8 +79,10 @@ WSGI_APPLICATION = 'ost-reservation.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'heroku_8bfee3ba4dc8c26',
+        'USER': 'bc9b55df022ec2',
+        'PASSWORD': '21e76a60',
     }
 }
 
