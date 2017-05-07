@@ -1,5 +1,5 @@
 """
-Django settings for {{ ost-reservation }} project on Heroku. For more info, see:
+Django settings for ost-reservation project on Heroku. For more info, see:
 https://github.com/heroku/heroku-django-template
 
 For more information on this file, see
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = '{{ ost-reservation }}.urls'
+ROOT_URLCONF = 'ost-reservation.urls'
 
 TEMPLATES = [
     {
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = '{{ ost-reservation }}.wsgi.application'
+WSGI_APPLICATION = 'ost-reservation.wsgi.application'
 
 
 # Database

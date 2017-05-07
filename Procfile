@@ -1,1 +1,2 @@
-web: gunicorn {{ ost-reservation }}.wsgi
+web: gunicorn ost-reservation.wsgi
+
