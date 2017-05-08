@@ -70,12 +70,6 @@ def clear_users():
 
 
 def user_logout(request):
-    if request.method == 'POST':
-        logout(request)
-        return render(request, 'login.html',{})
-    else:
-        if request.user.is_authenticated():
-            return render(request, 'logout.html',{'user':request.user})
-        else:
-            return redirect('/login')
-
+    logout(request)
+    return render(request, 'login.html',{})
+    
