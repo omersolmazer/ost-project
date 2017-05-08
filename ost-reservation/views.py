@@ -8,7 +8,10 @@ from django.contrib.auth.models import User
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the index.")
+    if request.user && request.user.is_authenticated():
+        return render(request, 'index.html', {'user' : request.user})
+    else:
+        return render(request, 'index.html', {})
 
 def users(request):
     users = User.objects.all()
