@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 
 def index(request):
-    if request.user && request.user.is_authenticated():
+    if request.user and request.user.is_authenticated() :
         return render(request, 'index.html', {'user' : request.user})
     else:
         return render(request, 'index.html', {})
