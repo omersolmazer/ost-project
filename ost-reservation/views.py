@@ -1,8 +1,8 @@
 from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from .models import Resource, Reservations
-from .forms import SignUpForm
+from .forms import SignUpForm, ResourceCreateForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
@@ -12,6 +12,7 @@ def index(request):
         return render(request, 'index.html', {'user' : request.user})
     else:
         return render(request, 'index.html', {})
+
 
 def users(request):
     users = User.objects.all()
@@ -64,6 +65,40 @@ def user_login(request):
         return render(request, 'login.html', {'form':form})
 
 
+def resources(request):
+    if request.method == 'POST':
+        form = ResourceCreateForm(data=request.POST)
+        if form.is_valid():
+            name = form.cleaned_data.get('name')
+            start_time = form.cleaned_data.get('start_time')
+            end_time = form.cleaned_data.get('end_time')
+            print(start_time)
+            print(end_time)
+            tags = form.cleaned_data.get('tag')
+            if not tags:
+                tags = ''
+            resource = Resource(owner=request.user, name=name, start_time=start_time, end_time=end_time, tags=tags)
+            resource.save()
+            return render(request, 'resources.html', {'form':ResourceCreateForm(), 'resources': Resource.objects.all()})
+        else:
+            return render(request, 'resources.html', {'invalid':True, 'form':form, 'resources': Resource.objects.all()})
+    else:
+        resources = Resource.objects.all()
+        return render(request, 'resources.html', { 'resources': resources, 'form':ResourceCreateForm() } )
+
+
+def resource(request, resource_id=0):
+    res = get_object_or_404(Resource, pk=resource_id)
+    return render(request, 'resource.html', { 'resource': res } )
+
+
+def err(request):
+    return render(request, '404.html', {} )
+
+def reservation(request):
+    reservations = Reservation.objects.all()
+    return render(request, 'reservation.html', { 'reservations': reservations } )
+
 def clear_users():
     x = User.objects.all()
     x.delete()
@@ -71,5 +106,5 @@ def clear_users():
 
 def user_logout(request):
     logout(request)
-    return render(request, 'login.html',{})
+    return render(request, 'index.html',{})
     

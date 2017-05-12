@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'ost-reservation.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'heroku_80416a779774fef',
-        'USER': 'b41dc03557b239',
-        'PASSWORD': '31b706dc',
-        'HOST': 'us-cdbr-iron-east-03.cleardb.net'
+        'ENGINE': os.environ.get('ENGINE',''),
+        'NAME': os.environ.get('NAME',''),
+        'USER': os.environ.get('USER',''),
+        'PASSWORD': os.environ.get('PASSWORD',''),
+        'HOST': os.environ.get('HOST',''),
     }
 }
 
