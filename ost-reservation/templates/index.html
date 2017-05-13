@@ -6,17 +6,66 @@
 <div class="container">
 
 
-<h2>City Wok Yo Yo </h2>
+<h2> Welcome</h2>
 
+
+{% if user and user.username %}
+
+<h2> Here are your reservations </h2>
 
 <ul>
 
-{% for user in users %}
-    <li> {{user.id}} {{ user.username }} {{ user.email }}</li>
+{% for reservation in user_reservations %}
+
+    <li> On resource: <a href='/resource/{{reservation.resource.id}}'>{{ reservation.resource.name }}</a>, starting at: {{ reservation.start_time }}  until {{  reservation.end_time }}. On {{ reservation.date }}  <a href='/cancelReservation/{{reservation.id}}'>Cancel</a></li>
+    
+
 {% endfor %}
 
 </ul>
 
+
+<h2> Here are your resources </h2>
+
+<ul>
+
+{% for resource in user_resources %}
+    <li> <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>, available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Last time: {{ resource.last_res_made }} {% if resource.tags == ''%} No tags are given {% else %} Tags:  {{  resource.tags }} {% endif %}</li>
+    Reservations made on {{ resource.name }}:
+    <div style="padding:20px;">
+        {% for reservation in resource.reservation_set.all  %}
+            <li> <a href='/reservation/{{reservation.id}}'> By user: {{ reservation.owner.username}}</a>, starting at: {{ reservation.start_time|time:"H:i" }}  until {{ reservation.end_time|time:"H:i" }} on {{ reservation.date }}. </li>
+        {% endfor %}
+    </div>
+
+{% endfor %}
+
+</ul>
+
+<h2> And here are all the resources </h2>
+
+<ul>
+
+{% for resource in all_resources %}
+    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a> Created by: {{resource.owner.username}}. Available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Last reservation date: {{ resource.last_res_made }} Tags: {% if resource.tags == ''%} No tags given {% else %} {{  resource.tags }} {% endif %}</li>
+
+{% endfor %}
+
+</ul>
+
+<div>
+  <a class="btn" href="/resources">Create a new resource!</a>
 </div>
 
+</div>
+
+
+{% else %}
+
+Please <a href='/login'>Login</a> or <a href='/signup'>Register</a> to continue
+
+{% endif %}
+
 {% endblock %}
+
+

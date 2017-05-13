@@ -13,15 +13,14 @@ class Resource(models.Model):
     name = models.CharField(max_length=50)
     start_time = models.TimeField('available from')
     end_time = models.TimeField('available until')
-
     tags = models.CharField(max_length=200, blank=True)
-    # url = models.CharField(max_length=100)
+    last_res_made = models.DateTimeField('Last made reservation on resource')
 
     
-class Reservations(models.Model):
+class Reservation(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
-    start_time = models.DateTimeField('res start')
-    end_time = models.DateTimeField('res end')
-
+    start_time = models.TimeField('res start')
+    end_time = models.TimeField('res end')
+    date = models.DateField('res date')
 

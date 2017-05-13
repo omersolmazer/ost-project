@@ -1,12 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 from django.utils.translation import ugettext_lazy as _
-from .models import Resource
+from .models import Resource, Reservation
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
 
     class Meta:
         model = User
@@ -22,11 +22,48 @@ class ResourceCreateForm(ModelForm):
             'name': _('Name of the resource'),
             'start_time': _('Available from'),
             'end_time': _('Available until'),
-            'tag': _('Tags to associate with resource (separate with comma)')
+            'tags': _('Tags')
+        }
+        help_texts = {
+            'tags': _('Separate with comma')
         }
         error_messages = {
             'name': {
                 'max_length': _("This resource's name is too long."),
             },
         }
+
+class ReservationForm(ModelForm):
+
+    class Meta:
+        model = Reservation
+        fields = ('start_time', 'end_time', 'date')
+        labels = {
+            'start_time': _('Start time'),
+            'end_time': _('End time'),
+            'date': _('Date'),
+        }
+        error_messages = {
+            'start_time': {
+                'too_early': _("Reservation can not start this early."),
+            },
+            'start_bound': {
+                'too early': _('Check the times again!'),
+                'too_late': _('Check the times again!'),
+            }
+        }
+
+class SearchForm(Form):
+    term = forms.CharField(max_length=50)
+    fields = ('term')
+    labels = {
+        'term': _('Search term')
+    }
+    error_messages = {
+        'length': {
+            'too_long': _("Search term cannot exceed 50 characters.")
+        }
+    }
+
+
 

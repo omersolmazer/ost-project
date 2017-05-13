@@ -53,21 +53,24 @@
         <a href="/"><span class="glyphicon glyphicon-home"></span> Home</a>
       </li>
       <li>
-        <a href="/resources"> Resources</a>
+        <a href="/resources"> Create a resource </a>
       </li>
-      {% if user and user.username %}
       <li>
-        <a href="/reservation"> Reservations</a>
+        <a href="/search"> Search </a>
       </li>
-      {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right">
       <li class="navbar-right">
         {% if user and user.username %}
-         <text style="color: white">{{ user.username }}</text>
+          <a href="/user">{{ user.username }}</a>
+        </li><li class="navbar-right">
          <a href="/logout">Logout</a>
+       </li>
         {% else %}
           <a href="/login">Login</a>
+        </li><li class="navbar-right">
+          <a href="/signup">Register</a>
+        </li>
         {% endif %}
       </li>
     </ul>

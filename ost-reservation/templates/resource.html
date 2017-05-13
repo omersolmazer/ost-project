@@ -1,0 +1,49 @@
+
+{% extends "banner.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+{% if invalid %}
+  <p style="color: red">Error creating the resource!</p>
+{% endif %}
+
+<div>
+<ul>
+{% if resource %}
+    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>. Would you like to <a href='/editResource/{{resource.id}}'>edit</a></li><li> Created by: {{resource.owner.username}}. </li><li> Available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}.</li><li> Tags: {% if resource.tags == ''%} No tags given {% else %} {{  resource.tags }} {% endif %}</li>
+{% endif %}
+</ul>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button type="submit">Reserve this resource</button>
+</form>
+
+<a href='/rss/{{resource.id}}' target="_blank">RSS Link</a>
+
+<div>
+  <h2>Reservations made for this resource</h2>
+
+  {% for reservation in resource.reservation_set.all  %}
+            <li> <a href='/reservation/{{reservation.id}}'> By user: {{ reservation.owner.username}}</a>, starting at: {{ reservation.start_time|time:"H:i" }}  until {{ reservation.end_time|time:"H:i" }} on {{ reservation.date }} . </li>
+        {% endfor %}
+
+</div>
+
+{% endblock %}
+

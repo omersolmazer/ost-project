@@ -30,7 +30,7 @@
 <h2>Resources in the system </h2>
 <ul>
 {% for resource in resources %}
-    <li> Name: <a href='resource/{{resource.id}}'>{{ resource.name}}</a>. Created by: {{resource.owner.username}}.  Available from: {{ resource.start_time }}  until {{ resource.end_time }}. Tags: {{ resource.tags }}</li>
+    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>. Created by: {{resource.owner.username}}.  Available from: {{ resource.start_time }}  until {{ resource.end_time }}. Tags: {{ resource.tags }}</li>
 {% endfor %}
 </ul>
 </div>
