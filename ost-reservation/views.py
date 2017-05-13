@@ -235,13 +235,6 @@ def search(request):
         return render(request, 'searchResults.html', {'form': SearchForm(),'resources': resources,'term': term})
 
 
-def rss(request, resource_id=0):
-    res = get_object_or_404(Resource, pk=resource_id)
-    rss = res.reservation_set.all()
-    rss = serializers.serialize("xml", rss, fields=('start_time', 'end_time', 'date'))
-    return render(request, 'rss.html', {'rss':rss})
-
-
 def reservation(request):
     reservations = Reservation.objects.all()
     remove_old_reservations(reservation)

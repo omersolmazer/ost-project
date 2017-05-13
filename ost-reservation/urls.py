@@ -30,7 +30,6 @@ urlpatterns = [
     url(r'^search/', views.search, name='search'),
     url(r'^search/(?P<term>[.]+)/$', views.search, name='search'),
     
-    url(r'^rss/(?P<resource_id>[0-9]+)/$', views.rss, name='rss'),
 
     url(r'^user', views.user, name='user'),
     url(r'^reset', views.reset, name='reset'),
