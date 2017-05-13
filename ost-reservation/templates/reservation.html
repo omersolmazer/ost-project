@@ -1,0 +1,41 @@
+{% extends "banner.html" %}
+{% load staticfiles %}
+
+
+{% block content %}
+
+<h2>Reservations</h2>
+    {% if invalid %}
+      <p style="color: red">Error creating the reservation!</p>
+    {% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <p>
+        {{ field.label_tag }}<br>
+        {{ field }}
+        {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    <button type="submit">Reserve the resource</button>
+  </form>
+
+<div>
+<h2>Resources in the system </h2>
+<ul>
+{% for resource in resources %}
+    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>. Created by: {{resource.owner.username}}.  Available from: {{ resource.start_time }}  until {{ resource.end_time }}. Tags: {{ resource.tags }}</li>
+{% endfor %}
+</ul>
+</div>
+
+
+
+{% endblock %}
+
