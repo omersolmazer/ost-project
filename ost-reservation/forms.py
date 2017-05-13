@@ -5,6 +5,7 @@ from django.forms import ModelForm, Form
 from django.utils.translation import ugettext_lazy as _
 from .models import Resource, Reservation
 
+
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
 
@@ -17,15 +18,19 @@ class ResourceCreateForm(ModelForm):
 
     class Meta:
         model = Resource
-        fields = ('name', 'start_time', 'end_time', 'tags')
+        fields = ('name', 'start_time', 'end_time', 'tags', 'capacity')
         labels = {
             'name': _('Name of the resource'),
             'start_time': _('Available from'),
             'end_time': _('Available until'),
-            'tags': _('Tags')
+            'tags': _('Tags'),
+            'capacity': _('Resource capacity')
         }
         help_texts = {
-            'tags': _('Separate with comma')
+            'tags': _('Separate with comma'),
+            'start_time': _('Format: HH:MM'),
+            'end_time': _('Format: HH:MM'),
+            'capacity': _('Resource capacity')
         }
         error_messages = {
             'name': {
@@ -42,6 +47,11 @@ class ReservationForm(ModelForm):
             'start_time': _('Start time'),
             'end_time': _('End time'),
             'date': _('Date'),
+        }
+        help_texts = {
+            'date': _('Format: MM/DD/YY'),
+            'start_time': _('Format: HH:MM'),
+            'end_time': _('Format: HH:MM'),
         }
         error_messages = {
             'start_time': {

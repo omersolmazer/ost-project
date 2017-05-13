@@ -12,7 +12,7 @@
 <div>
 <ul>
 {% if resource %}
-    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>. Would you like to <a href='/editResource/{{resource.id}}'>edit</a></li><li> Created by: {{resource.owner.username}}. </li><li> Available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}.</li><li> Tags: {% if resource.tags == ''%} No tags given {% else %} {{  resource.tags }} {% endif %}</li>
+    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>. Would you like to <a href='/editResource/{{resource.id}}'>edit</a></li><li> Created by: {{resource.owner.username}}. </li><li> Available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}.</li><li> Tags: {% if resource.tags == ''%} No tags given {% else %} {{  resource.tags }} {% endif %}. Reserved {{ resource.reserve_count }} times</li>
 {% endif %}
 </ul>
 </div>

@@ -63,10 +63,7 @@ def user_login(request):
             login(request, user)
             if request.user.is_authenticated():
                 return redirect('/index')
-            else:
-                return render(request, 'login.html', {'invalid':True, 'form': AuthenticationForm()})
-        else:
-            return render(request, 'login.html', {'not_valid':True, 'form': AuthenticationForm()})
+        return render(request, 'login.html', {'invalid':True, 'form': form})
 
     else:
         if request.user.is_authenticated():
@@ -87,10 +84,11 @@ def resources(request):
             start_time = form.cleaned_data.get('start_time')
             end_time = form.cleaned_data.get('end_time')
             tags = form.cleaned_data.get('tags')
+            capacity = form.cleaned_data.get('capacity')
             last_res_made = datetime.now()
             if not tags:
                 tags = ''
-            resource = Resource(owner=request.user, name=name, start_time=start_time, end_time=end_time, tags=tags, last_res_made=last_res_made)
+            resource = Resource(owner=request.user, name=name, start_time=start_time, end_time=end_time, tags=tags, last_res_made=last_res_made, capacity=capacity)
             resource.save()
             return render(request, 'resources.html', {'form':ResourceCreateForm(), 'resources': Resource.objects.all()})
         else:
@@ -158,13 +156,38 @@ def resource(request, resource_id=0):
                 form.add_error('date', 'Cannot make reservations for past!')
                 return render(request, 'resource.html', {'resource': res, 'form':form})
 
+            count = 0
+            for temp_res in res.reservation_set.all():
+                if temp_res.date == date:
+                    if start_time <= temp_res.start_time and end_time >= temp_res.start_time:
+                        count += 1
+                    elif start_time >= temp_res.start_time and start_time <= temp_res.end_time:
+                        count += 1
+
+            if count >= res.capacity:
+                form.add_error('date', 'Resource is all booked for this time slot!')
+                return render(request, 'resource.html', {'resource': res, 'form':form})
+
+            for temp_reservation in request.user.reservation_set.all():
+                if temp_reservation.date == date:
+                    if start_time <= temp_reservation.start_time and end_time >= temp_reservation.start_time:
+                        form.add_error('start_time', 'Cannot make reservation due to overlap!')
+                        return render(request, 'resource.html', {'resource': res, 'form':form})
+                    elif start_time >= temp_reservation.start_time and start_time <= temp_reservation.end_time:
+                        form.add_error('start_time', 'Cannot make reservation due to overlap!')
+                        return render(request, 'resource.html', {'resource': res, 'form':form})
+
             reservation = Reservation(start_time=start_time, end_time=end_time, date=date, owner=request.user, resource=res)
             reservation.save()
+            body = 'You have made a reservation on ' + res.name +' on date ' + str(date) + ' starting from:' + str(start_time) + ' ending at: ' + str(end_time)
+            
             new_date = datetime.combine(date, end_time)
             new_date = pytz.utc.localize(new_date)
             if new_date > res.last_res_made:
                 res.last_res_made = new_date
-                res.save()
+            res.reserve_count += 1
+            res.save()
+
             return render(request, 'resource.html', {'resource': res, 'form':ReservationForm()})
         else:
             res = get_object_or_404(Resource, pk=resource_id)
@@ -183,14 +206,6 @@ def user(request):
         return render(request, 'user.html', { 'user':request.user })
     else:
         return redirect('/index.html')
-
-def resource(request, resource_id=0):
-    res = get_object_or_404(Resource, pk=resource_id)
-    if request.user and res.owner == request.user:
-        editable = True
-    else:
-        editable = False
-    return render(request, 'resource.html', { 'resource': res, 'form':ReservationForm(), 'editable':editable } )
 
 
 def remove_old_reservations(reservations):
@@ -234,9 +249,9 @@ def reservation(request):
 
 
 def reset(request):
-    # User.objects.all().delete()
-    Reservation.objects.all().delete()
     Resource.objects.all().delete()
+    Reservation.objects.all().delete()
+    
     return render(request, 'index.html', {})
 
 

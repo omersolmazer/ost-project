@@ -30,7 +30,7 @@
 <ul>
 
 {% for resource in user_resources %}
-    <li> <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>, available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Last time: {{ resource.last_res_made }} {% if resource.tags == ''%} No tags are given {% else %} Tags:  {{  resource.tags }} {% endif %}</li>
+    <li> <a href='/resource/{{resource.id}}'>{{ resource.name}}</a>, available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Last time: {{ resource.last_res_made }} {% if resource.tags == ''%} No tags are given {% else %} Tags:  {{  resource.tags }} {% endif %}. Reserved {{ resource.reserve_count }} times</li>
     Reservations made on {{ resource.name }}:
     <div style="padding:20px;">
         {% for reservation in resource.reservation_set.all  %}
@@ -47,15 +47,11 @@
 <ul>
 
 {% for resource in all_resources %}
-    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a> Created by: {{resource.owner.username}}. Available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Last reservation date: {{ resource.last_res_made }} Tags: {% if resource.tags == ''%} No tags given {% else %} {{  resource.tags }} {% endif %}</li>
+    <li> Name: <a href='/resource/{{resource.id}}'>{{ resource.name}}</a> Created by: {{resource.owner.username}}. Available from: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Last reservation date: {{ resource.last_res_made }} Tags: {% if resource.tags == ''%} No tags given {% else %} {{  resource.tags }} {% endif %}. Reserved {{ resource.reserve_count }} times</li>
 
 {% endfor %}
 
 </ul>
-
-<div>
-  <a class="btn" href="/resources">Create a new resource!</a>
-</div>
 
 </div>
 

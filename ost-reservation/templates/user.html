@@ -18,8 +18,8 @@
 <div>
 
   {% for resource in user.resource_set.all  %}
-            <li> Name: <a href='/resource/{{resource.id}}'> {{ resource.name }}</a> Starting at: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. </li>
-        {% endfor %}
+            <li> Name: <a href='/resource/{{resource.id}}'> {{ resource.name }}</a> Starting at: {{ resource.start_time|time:"H:i" }}  until {{ resource.end_time|time:"H:i" }}. Reserved {{ resource.reserve_count }} times. </li>
+  {% endfor %}
 
 </div>
 
