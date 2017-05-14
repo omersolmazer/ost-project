@@ -9,6 +9,10 @@
 <h2> Welcome</h2>
 
 
+{% if disp %}
+    <p style="color: red">You need to be logged in </p>
+{% endif %}
+
 {% if user and user.username %}
 
 <h2> Here are your reservations </h2>

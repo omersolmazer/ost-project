@@ -22,7 +22,7 @@ def index(request):
         return render(request, 'index.html', {'user' : request.user, 'user_resources': user_resources, 'all_resources': all_resources, 'user_reservations': user_reservations})
 
     else:
-        return render(request, 'index.html', {})
+        return render(request, 'index.html', { 'disp':True })
 
 
 def users(request):
@@ -62,11 +62,11 @@ def user_login(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             if request.user.is_authenticated():
-                return redirect('/index')
+                return render(request, 'index.html', { 'disp':True })
         return render(request, 'login.html', {'invalid':True, 'form': form})
 
     else:
-        if request.user.is_authenticated():
+        if request.user and request.user.is_authenticated():
             return redirect('/index')
         form = AuthenticationForm()
         return render(request, 'login.html', {'form':form})
@@ -88,9 +88,12 @@ def resources(request):
             last_res_made = datetime.now()
             if not tags:
                 tags = ''
-            resource = Resource(owner=request.user, name=name, start_time=start_time, end_time=end_time, tags=tags, last_res_made=last_res_made, capacity=capacity)
-            resource.save()
-            return render(request, 'resources.html', {'form':ResourceCreateForm(), 'resources': Resource.objects.all()})
+            if request.user:
+                resource = Resource(owner=request.user, name=name, start_time=start_time, end_time=end_time, tags=tags, last_res_made=last_res_made, capacity=capacity)
+                resource.save()
+                return render(request, 'resources.html', {'form':ResourceCreateForm(), 'resources': Resource.objects.all()})
+            else:
+                return render(request, 'index.html', { 'disp':True })
         else:
             return render(request, 'resources.html', {'invalid':True, 'form':form, 'resources': Resource.objects.all()})
     else:
@@ -111,7 +114,10 @@ def edit_resource(request, resource_id=0):
                 tags = ''
             res.tags = tags
             res.save()
-            return render(request, 'resource.html', {'resource':res, 'user':request.user})
+            if request.user:
+                return render(request, 'resource.html', {'resource':res, 'user':request.user})
+            else:
+                return render(request, 'index.html', { 'disp':True })
         else:
             return render(request, 'edit.html', {'resource':get_object_or_404(Resource, pk=resource_id), 'user':request.user, 'form':form})
 
@@ -125,14 +131,14 @@ def edit_resource(request, resource_id=0):
                 form = ResourceCreateForm(instance=res)
                 return render(request, 'edit.html', {'resource':res, 'user': request.user, 'form':form})
         else:
-            return redirect('/index')
+            return render(request, 'index.html', { 'disp':True })
 
 
 def cancel_reservation(request, reservation_id=0):
     reservation = get_object_or_404(Reservation, pk=reservation_id)
     if request.user and reservation.owner == request.user:
         reservation.delete()
-    return redirect('/index')
+    return render(request, 'index.html', { 'disp':True })
 
 
 def resource(request, resource_id=0):
@@ -167,7 +173,8 @@ def resource(request, resource_id=0):
             if count >= res.capacity:
                 form.add_error('date', 'Resource is all booked for this time slot!')
                 return render(request, 'resource.html', {'resource': res, 'form':form})
-
+            if not request.user:
+                return render(request, 'index.html', { 'disp':True })
             for temp_reservation in request.user.reservation_set.all():
                 if temp_reservation.date == date:
                     if start_time <= temp_reservation.start_time and end_time >= temp_reservation.start_time:
